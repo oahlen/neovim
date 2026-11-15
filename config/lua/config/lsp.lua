@@ -1,0 +1,95 @@
+local on_init = function(client, _)
+    -- Disable semantic tokens
+    client.server_capabilities.semanticTokensProvider = nil
+end
+
+local on_attach = function(_, bufnr)
+    local map = function(keys, func, desc)
+        vim.keymap.set("n", keys, func, { buffer = bufnr, desc = "LSP: " .. desc })
+    end
+
+    local finder = require("fzf-lua")
+    map("gri", finder.lsp_implementations, "Goto Implementation")
+    map("grr", finder.lsp_references, "Goto References")
+
+    map("gd", finder.lsp_definitions, "Goto Definition")
+    map("gD", finder.lsp_declarations, "Goto Declaration")
+
+    map("gn", function()
+        vim.diagnostic.jump({ count = 1, float = true })
+    end, "Goto Next")
+    map("gN", function()
+        vim.diagnostic.jump({ count = -1, float = true })
+    end, "Goto Prev")
+
+    map("K", function()
+        vim.lsp.buf.hover({ border = "rounded", max_width = 100, max_height = 40 })
+    end, "Hover Documentation")
+
+    map("<C-s>", function()
+        vim.lsp.buf.signature_help({ border = "rounded", max_width = 100, max_height = 40 })
+    end, "Signature Help")
+
+    map("grt", vim.lsp.buf.type_definition, "Type Definition")
+    map("grn", vim.lsp.buf.rename, "Rename Symbol")
+    map("gra", finder.lsp_code_actions, "Code Actions")
+    map("==", function()
+        vim.lsp.buf.format({ async = true })
+    end, "Format Code")
+end
+
+local enable = function(name, opts)
+    local config = vim.tbl_deep_extend("force", { on_init = on_init, on_attach = on_attach }, opts or {})
+    vim.lsp.config[name] = config
+    vim.lsp.enable(name)
+end
+
+enable("lua_ls", {
+    settings = {
+        Lua = {
+            completion = {
+                keywordSnippet = "Disable",
+            },
+            diagnostics = {
+                globals = { "use", "vim" },
+                disable = { "lowercase-global" },
+            },
+            runtime = {
+                version = "LuaJIT",
+                path = vim.split(package.path, ";"),
+            },
+            workspace = {
+                library = {
+                    [vim.fn.expand("$VIMRUNTIME/lua")] = true,
+                    [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
+                },
+            },
+        },
+    },
+})
+
+enable("harper_ls", {
+    cmd = { "harper-ls", "--stdio" },
+    filetypes = { "markdown", "text", "tex", "typst" },
+    on_attach = function(client, bufnr)
+        on_attach(client, bufnr)
+        vim.diagnostic.config({ virtual_text = false }, vim.lsp.diagnostic.get_namespace(client.id))
+    end,
+})
+
+enable("ruff", {
+    cmd = { "ruff", "server" },
+    on_attach = function(client, bufnr)
+        on_attach(client, bufnr)
+        client.server_capabilities.hoverProvider = false
+    end,
+})
+
+enable("csharp_ls")
+enable("cssls")
+enable("html")
+enable("nil_ls")
+enable("pyright")
+enable("rust_analyzer")
+enable("svelte")
+enable("ts_ls")

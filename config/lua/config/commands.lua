@@ -1,0 +1,52 @@
+vim.api.nvim_create_autocmd("TextYankPost", {
+    desc = "Highlight when yanking text",
+    group = vim.api.nvim_create_augroup("highlight-yank", { clear = true }),
+    callback = function()
+        vim.hl.on_yank()
+    end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+    group = vim.api.nvim_create_augroup("treesitter-setup", { clear = true }),
+    callback = function(args)
+        pcall(vim.treesitter.start, args.buf)
+    end,
+})
+
+vim.api.nvim_create_autocmd("BufEnter", {
+    desc = "Force update csharp buffers when using csharp_ls",
+    group = vim.api.nvim_create_augroup("csharp-buffer-update", { clear = true }),
+    pattern = "*.cs",
+    callback = function(args)
+        local bufnr = args.buf
+        local clients = vim.lsp.get_clients({ bufnr = bufnr, name = "csharp_ls" })
+        if #clients == 0 then
+            return
+        end
+
+        -- Notify the LSP server that the document changed (even if it didn't)
+        -- This triggers diagnostic re-evaluation
+        local params = vim.lsp.util.make_text_document_params(bufnr)
+        local text = table.concat(vim.api.nvim_buf_get_lines(bufnr, 0, -1, false), "\n") .. "\n"
+        for _, client in ipairs(clients) do
+            ---@diagnostic disable-next-line: param-type-mismatch
+            client:notify("textDocument/didChange", {
+                textDocument = {
+                    uri = params.uri,
+                    version = vim.lsp.util.buf_versions[bufnr] or 0,
+                },
+                contentChanges = {
+                    { text = text },
+                },
+            })
+        end
+    end,
+})
+
+vim.api.nvim_create_user_command("ToggleBackground", function()
+    if vim.o.background == "dark" then
+        vim.o.background = "light"
+    else
+        vim.o.background = "dark"
+    end
+end, {})

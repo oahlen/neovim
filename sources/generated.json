@@ -1,0 +1,65 @@
+{
+    "agentic-nvim": {
+        "cargoLock": null,
+        "date": "2026-11-08",
+        "extract": null,
+        "name": "agentic-nvim",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "carlos-algms",
+            "repo": "agentic.nvim",
+            "rev": "4750d6ce4298b3018dd67f975a1457afbeeaa09f",
+            "sha256": "sha256-LfjVF0Elq0VQLxO3LQZKjt6IdsK2JvUlW8mw1EeA+Hk=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "4750d6ce4298b3018dd67f975a1457afbeeaa09f"
+    },
+    "aurora-nvim": {
+        "cargoLock": null,
+        "date": "2026-06-30",
+        "extract": null,
+        "name": "aurora-nvim",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "oahlen",
+            "repo": "aurora.nvim",
+            "rev": "563100df1b303105b205877b310130352d536006",
+            "sha256": "sha256-n2gqfyMnpu52Q2MMhG5l1OuAnkdaE3VAs2a0pb9BxgA=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "563100df1b303105b205877b310130352d536006"
+    },
+    "shellcheck-nvim": {
+        "cargoLock": null,
+        "date": "2025-04-07",
+        "extract": null,
+        "name": "shellcheck-nvim",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "pablos123",
+            "repo": "shellcheck.nvim",
+            "rev": "ee40e705ea61a4d790907c93cd01cc52480351fa",
+            "sha256": "sha256-1rfEtD+II1uh6cn/dBxwGKxNFUwgoKXWtcJHIi6ydy4=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "ee40e705ea61a4d790907c93cd01cc52480351fa"
+    }
+}
